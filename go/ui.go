@@ -98,7 +98,7 @@ func guiLoop(initted chan struct{}, refresh <-chan func(), evs chan<-MouseEvent)
 				event.Button = RightButton
 		}
 		event.Down = state != 0
-		fmt.Println("mousebutton:", btn, state, event)
+		//fmt.Println("mousebutton:", btn, state, event)
 		evs<-event
 	})
 	glfw.SetMousePosCallback(func(x, y int) {
