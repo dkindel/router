@@ -1,9 +1,13 @@
 
 package main
 
-import "fmt"
+import ("fmt")
 
 func main() {
+	MissionDemo()
+}
+
+func MissionDemo() {
 	// The demo is this:
 	//
 	// The window that is popped up is simply an interface to receive mouse-clicks
@@ -15,14 +19,15 @@ func main() {
 	//
 	// The mission structure is found in missions.go. It is relatively self documenting, but
 	// an ascii drawing wouldn't be bad I guess.
-	ui, ev := StartGui()
-	
-	ui <- func() {
+	w := NewWindow(500, 500)
+	defer close(w.Paint)
+	w.Paint <- func() {
 		SetColor(1, 0, 0)
 		Square(4, 4, 50, 50)
 		SetColor(0, 0, 1)
 		Square(45, 45, 100, 50)
 	}
+	ev := w.Events
 	
 	ss := NewStoryState()
 	
