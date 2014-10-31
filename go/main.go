@@ -4,7 +4,50 @@ package main
 import ("fmt")
 
 func main() {
-	MissionDemo()
+	CanvasDemo()
+}
+
+func CanvasDemo() {
+	w := NewWindow(500, 500)
+	
+	mainWindow(w)
+}
+
+func ps(xy ...float64) []Point {
+	l := len(xy)
+	if l % 2 == 1 {
+		panic("Must have even number of parameters!")
+	}
+	ret := make([]Point, l/2)
+	
+	for i := 0; i < l; i+=2 {
+		p := &ret[i/2]
+		p.X = xy[i]
+		p.Y = xy[i+1]
+	}
+	
+	return ret
+}
+
+func mainWindow(w *Window) {
+	// Let's make a button and put it on the screen!
+	
+	btnpaintchan := make(chan VarCanvas)
+	btn := NewButton(btnpaintchan)
+	
+	var router MouseRouter
+	for {
+		select {
+		case x := <-btnpaintchan:
+			cm := NewCanvasMaker()
+			cm.CanvasHit(Point{10, 10}, x.Draw(50, 50), btn)
+			c := cm.Freeze()
+			router = c.Router
+			w.Paint <- c.do
+		case m := <-w.Events:
+			router.Route(m)
+		}
+	}
 }
 
 func MissionDemo() {
@@ -21,12 +64,7 @@ func MissionDemo() {
 	// an ascii drawing wouldn't be bad I guess.
 	w := NewWindow(500, 500)
 	defer close(w.Paint)
-	w.Paint <- func() {
-		SetColor(1, 0, 0)
-		Square(4, 4, 50, 50)
-		SetColor(0, 0, 1)
-		Square(45, 45, 100, 50)
-	}
+	w.Paint <- func(){}
 	ev := w.Events
 	
 	ss := NewStoryState()

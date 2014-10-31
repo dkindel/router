@@ -47,21 +47,8 @@ func (w*Window) IgnoreEvents() {
 	}()
 }
 
-func SetColor(r, g, b float64) {
-	gl.Color3d(r, g, b)
-}
-
-func Square(x, y, w, h int) {
-	gl.Begin(gl.QUADS)
-		gl.Vertex2i(x, y)
-		gl.Vertex2i(x, y+h)
-		gl.Vertex2i(x+w, y+h)
-		gl.Vertex2i(x+w, y)
-	gl.End()
-}
-
 type MouseEvent struct {
-	X, Y float64
+	Point
 	Button MouseButton
 	Down bool
 }
@@ -181,4 +168,9 @@ func onResize(w, h int) {
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
 }
+
+
+
+
+
 
